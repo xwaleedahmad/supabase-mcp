@@ -34,7 +34,7 @@ const Hero = () => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(serverUrl);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2000);g
   };
 
   useEffect(() => {
@@ -55,9 +55,9 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="container mx-auto px-6 pt-32 pb-20">
+    <section className="container mx-auto px-6">
       <div className="grid items-center gap-12 lg:grid-cols-2">
-        <div className="space-y-8">
+        <div className="max-w-xl space-y-8">
           <div>
             <h1 className="mb-6 text-5xl leading-tight font-bold md:text-6xl lg:text-7xl">
               Supabase
@@ -66,7 +66,7 @@ const Hero = () => {
               <span className="wave inline-block">&#128075;</span>
             </h1>
 
-            <p className="text-muted-foreground text-lg leading-relaxed">
+            <p className="text-muted-foreground text-lg leading-relaxed text-balance">
               Seamlessly integrate powerful database operations into your
               applications with our Model Context Protocol server.
             </p>
@@ -96,15 +96,15 @@ const Hero = () => {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <div className="bg-card border-primary/30 flex items-center gap-2 rounded-full border px-4 py-2">
+            <div className="bg-card border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
               <Zap className="text-primary h-4 w-4" />
               <span className="text-foreground text-sm">Lightning Fast</span>
             </div>
-            <div className="bg-card border-primary/30 flex items-center gap-2 rounded-full border px-4 py-2">
+            <div className="bg-card border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
               <Shield className="text-primary h-4 w-4" />
               <span className="text-foreground text-sm">Secure</span>
             </div>
-            <div className="bg-card border-primary/30 flex items-center gap-2 rounded-full border px-4 py-2">
+            <div className="bg-card border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
               <Wrench className="text-primary h-4 w-4" />
               <span className="text-foreground text-sm">Easy Setup</span>
             </div>
@@ -113,7 +113,7 @@ const Hero = () => {
 
         {/* Right side - Console demo */}
         <div className="w-full max-w-2xl lg:ml-auto">
-          <Card className="glass-card border-primary/30 py-4 animate-float bg-transparent md:p-4">
+          <Card className="glass-card border-primary/30 animate-float bg-transparent py-4 md:p-4">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Badge className="bg-primary/20 text-primary border-primary/30">
@@ -125,7 +125,7 @@ const Hero = () => {
               </div>
             </div>
 
-            <Card className="bg-background/50 border-primary/20 mb-4 p-1">
+            <Card className="bg-card border-primary/20 mb-4 p-1">
               <div className="border-border/50 flex items-center justify-between border-b px-4 py-2">
                 <h3 className="flex items-center gap-2 text-sm font-semibold">
                   <span className="text-primary">❯</span> MCP Server Console

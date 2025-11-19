@@ -3,7 +3,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border ;
   }
   body {
     @apply bg-background text-foreground;
@@ -39,7 +39,7 @@
   --input: 220 15% 15%;
   --ring: 158 64% 52%;
 
-  --radius: 0.75rem;
+  --radius: 6.75rem;
 
   /* Custom gradients */
   --gradient-primary: linear-gradient(
