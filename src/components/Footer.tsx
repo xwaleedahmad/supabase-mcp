@@ -23,7 +23,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto max-w-lg">
-        <Card className="bg-card border-primary/30 border">
+        <Card className="bg-card/50 border-primary/30 border">
           <CardHeader className="pb-4! text-center">
             <CardTitle className="text-foreground flex items-center justify-center gap-2 text-xl md:text-2xl">
               <Github className="text-foreground size-5 md:size-6" />
@@ -49,7 +49,7 @@ export default function Footer() {
               </Button>
             </div>
 
-            <div className="border-muted border-t pt-4 text-center">
+            <div className="border-secondary/30 border-t pt-4 text-center">
               <p className="text-muted-foreground text-sm">
                 Built with ❤️ by{" "}
                 <Link

@@ -7,23 +7,23 @@ import { useEffect, useState } from "react";
 
 const consoleCommands = [
   { command: "$ supabase-mcp --start", delay: 0 },
-  { command: "> Connecting to Supabase instance...", delay: 800 },
+  { command: "> Connecting to Supabase instance...", delay: 1000 },
   {
     command: "> mcp.listTables({ schema: 'public' })",
-    delay: 1600,
+    delay: 3000,
     color: "muted",
   },
   {
     command: "> mcp.createRecord({ table: 'users', data: {...} })",
-    delay: 2400,
+    delay: 4000,
     color: "muted",
   },
   {
     command: "> mcp.query({ sql: 'SELECT * FROM users' })",
-    delay: 3200,
+    delay: 5000,
     color: "muted",
   },
-  { command: "✓ Processing...", delay: 4000, color: "success" },
+  { command: "✓ Processed successfully!", delay: 7000, color: "success" },
 ];
 
 const Hero = () => {
@@ -34,24 +34,38 @@ const Hero = () => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(serverUrl);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);g
+    setTimeout(() => setCopied(false), 2000);
   };
 
   useEffect(() => {
-    const maxDelay =
-      Math.max(...consoleCommands.map((cmd) => cmd.delay)) + 1000;
+    const maxDelay = Math.max(...consoleCommands.map((cmd) => cmd.delay));
+    const restartDelay = maxDelay + 2000;
+    const activeTimeouts: Array<ReturnType<typeof setTimeout>> = [];
+    let loopTimeout: ReturnType<typeof setTimeout> | null = null;
 
-    consoleCommands.forEach((cmd, index) => {
-      setTimeout(() => {
-        setVisibleLines(index + 1);
-      }, cmd.delay);
-    });
-
-    const resetTimer = setTimeout(() => {
+    const runSequence = () => {
+      activeTimeouts.forEach(clearTimeout);
+      activeTimeouts.length = 0;
       setVisibleLines(0);
-    }, maxDelay);
 
-    return () => clearTimeout(resetTimer);
+      consoleCommands.forEach((cmd, index) => {
+        const timeoutId = setTimeout(() => {
+          setVisibleLines(index + 1);
+        }, cmd.delay);
+        activeTimeouts.push(timeoutId);
+      });
+
+      loopTimeout = setTimeout(runSequence, restartDelay);
+    };
+
+    runSequence();
+
+    return () => {
+      activeTimeouts.forEach(clearTimeout);
+      if (loopTimeout) {
+        clearTimeout(loopTimeout);
+      }
+    };
   }, []);
 
   return (
@@ -76,7 +90,7 @@ const Hero = () => {
             <label className="text-muted-foreground mb-3 block text-sm">
               Copy the server URL:
             </label>
-            <div className="border-primary/30 bg-card flex items-center gap-3 rounded-xl border py-2 ps-4 pe-2">
+            <div className="border-primary/30 bg-card/50 flex items-center gap-3 rounded-xl border py-2 ps-4 pe-2">
               <code className="text-primary flex-1 font-mono text-sm break-all">
                 {serverUrl}
               </code>
@@ -96,15 +110,15 @@ const Hero = () => {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <div className="bg-card border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
+            <div className="bg-card/50 border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
               <Zap className="text-primary h-4 w-4" />
               <span className="text-foreground text-sm">Lightning Fast</span>
             </div>
-            <div className="bg-card border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
+            <div className="bg-card/50 border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
               <Shield className="text-primary h-4 w-4" />
               <span className="text-foreground text-sm">Secure</span>
             </div>
-            <div className="bg-card border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
+            <div className="bg-card/50 border-primary/30 flex cursor-default items-center gap-2 rounded-full border px-4 py-2 transition-transform duration-200 hover:scale-105">
               <Wrench className="text-primary h-4 w-4" />
               <span className="text-foreground text-sm">Easy Setup</span>
             </div>
@@ -113,7 +127,7 @@ const Hero = () => {
 
         {/* Right side - Console demo */}
         <div className="w-full max-w-2xl lg:ml-auto">
-          <Card className="glass-card border-primary/30 animate-float bg-transparent py-4 md:p-4">
+          <Card className="glass-card border-primary/30 bg-transparent py-4 md:p-4">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Badge className="bg-primary/20 text-primary border-primary/30">
@@ -125,8 +139,8 @@ const Hero = () => {
               </div>
             </div>
 
-            <Card className="bg-card border-primary/20 mb-4 p-1">
-              <div className="border-border/50 flex items-center justify-between border-b px-4 py-2">
+            <Card className="bg-card/50 border-primary/20 mb-4 p-1">
+              <div className="border-secondary/30 flex items-center justify-between border-b px-4 py-2">
                 <h3 className="flex items-center gap-2 text-sm font-semibold">
                   <span className="text-primary">❯</span> MCP Server Console
                 </h3>
@@ -136,12 +150,12 @@ const Hero = () => {
                   <div className="bg-primary h-3 w-3 rounded-full"></div>
                 </div>
               </div>
-              <div className="min-h-[250px] space-y-2 p-4 font-mono text-xs">
+              <div className="min-h-[250px] space-y-2 p-4 font-mono text-xs sm:text-sm">
                 <div className="text-primary">$ mcp-server --live-demo</div>
                 {consoleCommands.slice(0, visibleLines).map((cmd, index) => (
                   <div
                     key={index}
-                    className={`animate-slide-up ${
+                    className={`animate-fade ${
                       cmd.color === "success"
                         ? "text-primary"
                         : cmd.color === "muted"
@@ -167,10 +181,12 @@ const Hero = () => {
                 <Badge className="bg-primary/20 text-primary border-primary/30 text-xs">
                   Success Rate
                 </Badge>
-                <span className="gradient-text text-2xl font-bold">99.9%</span>
+                <span className="gradient-text text-xl font-bold">99.9%</span>
               </div>
               <Badge variant="outline" className="border-primary/30 text-xs">
-                <span className="text-primary mr-1">⚡</span>
+                <span className="text-primary mr-2">
+                  <Zap className="size-3 fill-yellow-500 text-yellow-500 md:size-4" />
+                </span>
                 Response Time ~50ms
               </Badge>
             </div>

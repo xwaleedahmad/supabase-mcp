@@ -25,7 +25,7 @@ const VideoShowcase = () => {
           </p>
         </div>
 
-        <Card className="bg-card border-primary/30 glow-accent relative mx-auto aspect-video max-w-5xl overflow-hidden">
+        <Card className="bg-card/50  border-primary/30 glow-accent relative mx-auto aspect-video max-w-5xl overflow-hidden">
           {isVideoPlaying ? (
             <>
               <button
@@ -36,7 +36,7 @@ const VideoShowcase = () => {
               </button>
               <video
                 src="demo-video.mp4"
-                className="relative object-cover w-full h-full"
+                className="relative object-cover w-full h-full rounded-xl"
                 autoPlay
                 controls
                 onEnded={() => setIsVideoPlaying(false)}

@@ -95,7 +95,7 @@ const ToolsShowcase = () => {
           {tools.map((tool, index) => (
             <Card
               key={index}
-              className="bg-card border-primary/30 group cursor-pointer p-5 transition-all duration-300 hover:scale-105"
+              className="bg-card/50 border-primary/30 group cursor-pointer p-5 transition-all duration-300 hover:scale-105"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="flex items-start gap-4">
