@@ -1,16 +1,28 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Play, ExternalLink, X } from "lucide-react";
+import { Play, X } from "lucide-react";
 import { useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const VideoShowcase = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 1,
+  });
+  const { ref: refVideo, inView: inViewVideo } = useInView({
+    triggerOnce: true,
+    threshold: 0.6,
+  });
+
   return (
     <section id="video" className="container mx-auto px-6">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
+        <div
+          ref={ref}
+          className={`mb-12 text-center ${inView ? "animate-fade-up opacity-100" : "opacity-0"}`}
+        >
           <Badge className="bg-secondary/20 text-primary border-primary/30 mb-4">
             Video Demo
           </Badge>
@@ -25,7 +37,10 @@ const VideoShowcase = () => {
           </p>
         </div>
 
-        <Card className="bg-card/50  border-primary/30 glow-accent relative mx-auto aspect-video max-w-5xl overflow-hidden">
+        <Card
+          ref={refVideo}
+          className={`bg-card/50 ${inViewVideo ? "animate-fade-up opacity-100" : "opacity-0"} border-primary/30 glow-accent relative mx-auto aspect-video max-w-5xl overflow-hidden`}
+        >
           {isVideoPlaying ? (
             <>
               <button
@@ -36,7 +51,7 @@ const VideoShowcase = () => {
               </button>
               <video
                 src="demo-video.mp4"
-                className="relative object-cover w-full h-full rounded-xl"
+                className="relative h-full w-full rounded-xl object-cover"
                 autoPlay
                 controls
                 onEnded={() => setIsVideoPlaying(false)}

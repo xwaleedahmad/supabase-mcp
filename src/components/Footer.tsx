@@ -5,15 +5,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Github } from "lucide-react";
 import Link from "next/link";
+import { useInView } from "react-intersection-observer";
 
 export default function Footer() {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 1,
+  });
+  const { ref: cardRef, inView: cardInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.6,
+  });
   return (
     <section className="container mx-auto px-4">
-      <div className="mb-12 text-center">
+      <div
+        ref={ref}
+        className={`mb-12 text-center ${inView ? "animate-fade-up opacity-100" : "opacity-0"}`}
+      >
         <Badge className="bg-secondary/20 text-primary border-primary/30 mb-4">
           Open source
         </Badge>
-        <h2 className="mb-4 md:mb-6 text-4xl leading-tight font-bold md:text-5xl">
+        <h2 className="mb-4 text-4xl leading-tight font-bold md:mb-6 md:text-5xl">
           Ready to get started ?
         </h2>
         <p className="text-muted-foreground mx-auto max-w-2xl text-lg text-balance md:text-xl">
@@ -23,7 +35,10 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto max-w-lg">
-        <Card className="bg-card/50 border-primary/30 border">
+        <Card
+          ref={cardRef}
+          className={`bg-card/50 border-primary/30 border ${cardInView ? "animate-fade-up opacity-100" : "opacity-0"} `}
+        >
           <CardHeader className="pb-4! text-center">
             <CardTitle className="text-foreground flex items-center justify-center gap-2 text-xl md:text-2xl">
               <Github className="text-foreground size-5 md:size-6" />

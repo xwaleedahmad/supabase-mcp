@@ -6,9 +6,9 @@ import VideoShowcase from "@/components/VideoShowcase";
 
 export default function Home() {
   return (
-    <div className="bg-background relative max-w-360 mx-auto min-h-screen">
+    <div className="bg-background relative mx-auto min-h-screen max-w-360">
       <AnimatedBackground />
-      <main className="relative z-10 space-y-20 py-32 md:space-y-36">
+      <main className="relative z-10 space-y-20 py-16 md:space-y-36 md:py-32">
         <Hero />
         <ToolsShowcase />
         <VideoShowcase />

@@ -1,3 +1,4 @@
+"use client";
 import {
   Database,
   Search,
@@ -8,12 +9,10 @@ import {
   Table,
   FileText,
   Shield,
-  Zap,
-  Code,
-  Link,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useInView } from "react-intersection-observer";
 
 const tools = [
   {
@@ -73,10 +72,14 @@ const tools = [
 ];
 
 const ToolsShowcase = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+  });
+
   return (
     <section id="tools" className="container mx-auto px-6">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
+        <div className="animate-fade-up mb-12 text-center">
           <Badge className="bg-secondary/20 text-primary border-primary/30 mb-4">
             {tools.length} Powerful Tools
           </Badge>
@@ -91,11 +94,14 @@ const ToolsShowcase = () => {
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        <div
+          ref={ref}
+          className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+        >
           {tools.map((tool, index) => (
             <Card
               key={index}
-              className="bg-card/50 border-primary/30 group cursor-pointer p-5 transition-all duration-300 hover:scale-105"
+              className={`bg-card/50 ${inView ? `animate-fade-up opacity-100` : "opacity-0"} border-primary/30 group cursor-pointer p-5 transition-all duration-300 hover:scale-105`}
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="flex items-start gap-4">

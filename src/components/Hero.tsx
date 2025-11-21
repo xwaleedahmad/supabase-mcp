@@ -71,7 +71,8 @@ const Hero = () => {
   return (
     <section className="container mx-auto px-6">
       <div className="grid items-center gap-12 lg:grid-cols-2">
-        <div className="max-w-xl space-y-8">
+        {/* Left side - Description */}
+        <div className="animate-fade-right max-w-xl space-y-8">
           <div>
             <h1 className="mb-6 text-5xl leading-tight font-bold md:text-6xl lg:text-7xl">
               Supabase
@@ -91,7 +92,7 @@ const Hero = () => {
               Copy the server URL:
             </label>
             <div className="border-primary/30 bg-card/50 flex items-center gap-3 rounded-xl border py-2 ps-4 pe-2">
-              <code className="text-primary flex-1 font-mono text-sm break-all">
+              <code className="text-foreground flex-1 font-mono text-sm break-all">
                 {serverUrl}
               </code>
               <Button
@@ -126,7 +127,7 @@ const Hero = () => {
         </div>
 
         {/* Right side - Console demo */}
-        <div className="w-full max-w-2xl lg:ml-auto">
+        <div className="animate-fade-left w-full max-w-2xl lg:ml-auto">
           <Card className="glass-card border-primary/30 bg-transparent py-4 md:p-4">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
