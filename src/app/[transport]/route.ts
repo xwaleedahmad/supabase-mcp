@@ -1,7 +1,11 @@
 import { createMcpHandler } from "mcp-handler";
+import { supabase } from "@/lib/supabase/server";
+import { z } from "zod";
+
+const Table = "Products";
 
 const handler = createMcpHandler((server) => {
-  // --- 1. CREATOR INFO ---
+  // --- CREATOR INFO ---
   server.tool(
     "creator_info",
     "Get detailed information about the app creator",
@@ -30,213 +34,134 @@ const handler = createMcpHandler((server) => {
     },
   );
 
-  // // --- 2. LIST TABLES ---
-  // server.tool(
-  //   "list_tables",
-  //   "List all public tables in the database",
-  //   {},
-  //   async () => {
-  //     const { data, error } = await supabase
-  //       .from("information_schema.tables")
-  //       .select("table_name")
-  //       .eq("table_schema", "public");
+  // --- TOOL 1: Create Document (Add Product) ---
+  server.tool(
+    "create_document",
+    "Add a new product to inventory. Validates and ensures title, price,category and quantity exists.",
+    {
+      name: z.string(),
+      price: z.number().positive().describe("Price in USD, must be positive"),
+      category: z
+        .string()
+        .describe("E.g., Electronics, Clothing, Home, Video Games, etc."),
+      quantity: z.number().int().nonnegative().default(1).optional(),
+    },
+    async ({ name, price, category, quantity }) => {
+      const { data, error } = await supabase
+        .from(Table)
+        .insert({
+          name,
+          price,
+          category,
+          quantity,
+        })
+        .select()
+        .single();
 
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [
-  //         { type: "text", text: JSON.stringify(data.map((t) => t.table_name)) },
-  //       ],
-  //     };
-  //   },
-  // );
+      if (error)
+        return {
+          content: [{ type: "text", text: `Error: ${error.message}` }],
+          isError: true,
+        };
 
-  // // --- 3. GET SCHEMA (Fields) ---
-  // server.tool(
-  //   "get_table_schema",
-  //   "Get column names and types for a specific table",
-  //   { tableName: z.string() },
-  //   async ({ tableName }) => {
-  //     const { data, error } = await supabase
-  //       .from("information_schema.columns")
-  //       .select("column_name, data_type, is_nullable")
-  //       .eq("table_schema", "public")
-  //       .eq("table_name", tableName);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Success: Added '${data.name}' to ${data.category} for $${data.price}. (ID: ${data.id})`,
+          },
+        ],
+      };
+    },
+  );
 
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
-  //     };
-  //   },
-  // );
+  // --- TOOL 2: Get Document (Get Product based on exact value match) ---
+  server.tool(
+    "get_document",
+    "Find a Product by a specific column (e.g., find product by id,title,price or category)",
+    {
+      tableName: z.string().default(Table),
+      filterColumn: z
+        .string()
+        .describe(
+          "The column name to filter by e.g., find product by id,title,price or category)",
+        ),
+      filterValue: z.string().describe("The value to match"),
+    },
+    async ({ tableName, filterColumn, filterValue }) => {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select("*")
+        .eq(filterColumn, filterValue);
 
-  // // --- 4. CREATE ROW ---
-  // server.tool(
-  //   "create_row",
-  //   "Insert a new row into any table",
-  //   {
-  //     tableName: z.string(),
-  //     data: z.string().describe("JSON string of object to insert"),
-  //   },
-  //   async ({ tableName, data }) => {
-  //     let parsed;
-  //     try {
-  //       parsed = JSON.parse(data);
-  //     } catch {
-  //       return { content: [{ type: "text", text: "Invalid JSON data" }] };
-  //     }
+      if (error)
+        return {
+          content: [{ type: "text", text: `Error: ${error.message}` }],
+          isError: true,
+        };
+      return {
+        content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+      };
+    },
+  );
 
-  //     const { data: res, error } = await supabase
-  //       .from(tableName)
-  //       .insert(parsed)
-  //       .select()
-  //       .single();
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [{ type: "text", text: `Created: ${JSON.stringify(res)}` }],
-  //     };
-  //   },
-  // );
+  // --- TOOL 3: Update Document (Update Product) ---
+  server.tool(
+    "update_document",
+    "Update a Product(e.g., change name, price, category, or quantity)",
+    {
+      tableName: z.string().default(Table),
+      filterColumn: z.string(),
+      filterValue: z.string(),
+      data: z
+        .string()
+        .describe(
+          "JSON string of fields to update (e.g. '{\"price\": 19.99}')",
+        ),
+    },
+    async ({ tableName, filterColumn, filterValue, data }) => {
+      const { data: result, error } = await supabase
+        .from(tableName)
+        .update(JSON.parse(data))
+        .eq(filterColumn, filterValue)
+        .select();
 
-  // // --- 5. UPDATE ROW (Covers "Edit") ---
-  // server.tool(
-  //   "update_row",
-  //   "Update specific fields of a row by ID",
-  //   {
-  //     tableName: z.string(),
-  //     id: z.string(),
-  //     data: z.string().describe("JSON string of fields to update"),
-  //   },
-  //   async ({ tableName, id, data }) => {
-  //     let parsed;
-  //     try {
-  //       parsed = JSON.parse(data);
-  //     } catch {
-  //       return { content: [{ type: "text", text: "Invalid JSON data" }] };
-  //     }
+      if (error)
+        return {
+          content: [{ type: "text", text: `Error: ${error.message}` }],
+          isError: true,
+        };
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
+    },
+  );
 
-  //     const { data: res, error } = await supabase
-  //       .from(tableName)
-  //       .update(parsed)
-  //       .eq("id", id)
-  //       .select()
-  //       .single();
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [{ type: "text", text: `Updated: ${JSON.stringify(res)}` }],
-  //     };
-  //   },
-  // );
+  // --- TOOL 4: Delete Document (Generic) ---
+  server.tool(
+    "delete_document",
+    "Delete a row permanently",
+    {
+      tableName: z.string().default(Table),
+      filterColumn: z.string(),
+      filterValue: z.string(),
+    },
+    async ({ tableName, filterColumn, filterValue }) => {
+      const { error } = await supabase
+        .from(tableName)
+        .delete()
+        .eq(filterColumn, filterValue);
 
-  // // --- 6. DELETE ROW ---
-  // server.tool(
-  //   "delete_row",
-  //   "Delete a row permanently by ID",
-  //   { tableName: z.string(), id: z.string() },
-  //   async ({ tableName, id }) => {
-  //     const { error } = await supabase.from(tableName).delete().eq("id", id);
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [
-  //         { type: "text", text: `Deleted row ${id} from ${tableName}` },
-  //       ],
-  //     };
-  //   },
-  // );
-
-  // // --- 7. UPSERT ROW ---
-  // server.tool(
-  //   "upsert_row",
-  //   "Insert a row, or update if it already exists (based on ID)",
-  //   { tableName: z.string(), data: z.string().describe("JSON string of data") },
-  //   async ({ tableName, data }) => {
-  //     let parsed;
-  //     try {
-  //       parsed = JSON.parse(data);
-  //     } catch {
-  //       return { content: [{ type: "text", text: "Invalid JSON data" }] };
-  //     }
-
-  //     const { data: res, error } = await supabase
-  //       .from(tableName)
-  //       .upsert(parsed)
-  //       .select()
-  //       .single();
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [{ type: "text", text: `Upserted: ${JSON.stringify(res)}` }],
-  //     };
-  //   },
-  // );
-
-  // // --- 8. READ ALL ROWS ---
-  // server.tool(
-  //   "read_all_rows",
-  //   "List rows from a table with optional filter",
-  //   {
-  //     tableName: z.string(),
-  //     limit: z.number().optional().default(20),
-  //     filterCol: z.string().optional(),
-  //     filterVal: z.string().optional(),
-  //   },
-  //   async ({ tableName, limit, filterCol, filterVal }) => {
-  //     let query = supabase.from(tableName).select("*").limit(limit);
-  //     if (filterCol && filterVal) query = query.eq(filterCol, filterVal);
-
-  //     const { data, error } = await query;
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
-  //     };
-  //   },
-  // );
-
-  // // --- 9. READ ROW BY ID ---
-  // server.tool(
-  //   "read_row_by_id",
-  //   "Get a single row by its ID",
-  //   { tableName: z.string(), id: z.string() },
-  //   async ({ tableName, id }) => {
-  //     const { data, error } = await supabase
-  //       .from(tableName)
-  //       .select("*")
-  //       .eq("id", id)
-  //       .single();
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
-  //     };
-  //   },
-  // );
-
-  // // --- 10. RUN SQL (Bonus Suggestion) ---
-  // server.tool(
-  //   "run_sql_query",
-  //   "Run a raw READ-ONLY SQL query for complex analysis",
-  //   { query: z.string().describe("SELECT query only") },
-  //   async ({ query }) => {
-  //     if (!query.toLowerCase().trim().startsWith("select")) {
-  //       return {
-  //         content: [{ type: "text", text: "Error: Only SELECT allowed" }],
-  //       };
-  //     }
-  //     // Requires 'exec_sql' RPC function in Supabase
-  //     const { data, error } = await supabase.rpc("exec_sql", { query });
-
-  //     if (error)
-  //       return { content: [{ type: "text", text: `Error: ${error.message}` }] };
-  //     return {
-  //       content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
-  //     };
-  //   },
-  // );
+      if (error)
+        return {
+          content: [{ type: "text", text: `Error: ${error.message}` }],
+          isError: true,
+        };
+      return {
+        content: [{ type: "text", text: "Document deleted successfully" }],
+      };
+    },
+  );
 });
 
 export { handler as GET, handler as POST };
