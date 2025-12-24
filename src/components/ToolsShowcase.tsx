@@ -1,73 +1,45 @@
 "use client";
-import {
-  Database,
-  Search,
-  Edit,
-  Trash2,
-  Plus,
-  RefreshCw,
-  Table,
-  FileText,
-  Shield,
-} from "lucide-react";
+import { Database, Search, Edit, Trash2, Plus, RefreshCw } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useInView } from "react-intersection-observer";
 
 const tools = [
   {
+    icon: Plus,
+    name: "Create Document",
+    description: "Add new products",
+    category: "Write",
+  },
+  {
     icon: Database,
-    name: "List Tables",
-    description: "Retrieve all tables and schemas",
+    name: "List Documents",
+    description: "Retrieve all products",
     category: "Query",
   },
   {
     icon: Search,
-    name: "Execute Query",
-    description: "Run custom SQL queries with safety",
+    name: "Get Document",
+    description: "Find by criteria",
     category: "Query",
   },
   {
-    icon: Plus,
-    name: "Create Record",
-    description: "Insert new records with validation",
-    category: "Write",
-  },
-  {
     icon: Edit,
-    name: "Update Record",
-    description: "Modify existing records seamlessly",
-    category: "Write",
-  },
-  {
-    icon: Trash2,
-    name: "Delete Record",
-    description: "Remove records with safety checks",
+    name: "Update Document",
+    description: "Modify product details",
     category: "Write",
   },
   {
     icon: RefreshCw,
-    name: "Realtime Sync",
-    description: "Subscribe changes in real-time",
-    category: "Realtime",
+    name: "Upsert Document",
+    description: "Create or update by ID",
+    category: "Write",
   },
   {
-    icon: Table,
-    name: "Table Schema",
-    description: "Get detailed schema information",
-    category: "Query",
-  },
-  {
-    icon: Shield,
-    name: "RLS Policies",
-    description: "Manage Row Level Security policies",
-    category: "Security",
-  },
-  {
-    icon: FileText,
-    name: "Migrations",
-    description: "Run and track database migrations",
-    category: "Admin",
+    icon: Trash2,
+    name: "Delete Document",
+    description: "Remove products safely",
+    category: "Write",
   },
 ];
 

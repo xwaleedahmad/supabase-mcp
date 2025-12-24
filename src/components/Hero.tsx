@@ -1,5 +1,5 @@
 "use client";
-import { Copy, Check, Zap, Shield, Wrench } from "lucide-react";
+import { Copy, Check, Zap, Shield, Wrench, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,17 +9,17 @@ const consoleCommands = [
   { command: "$ supabase-mcp --start", delay: 0 },
   { command: "> Connecting to Supabase instance...", delay: 1000 },
   {
-    command: "> mcp.listTables({ schema: 'public' })",
+    command: "> mcp.createDocument()",
     delay: 3000,
     color: "muted",
   },
   {
-    command: "> mcp.createRecord({ table: 'users', data: {...} })",
+    command: "> mcp.listDocuments()",
     delay: 4000,
     color: "muted",
   },
   {
-    command: "> mcp.query({ sql: 'SELECT * FROM users' })",
+    command: "> mcp.updateDocument()",
     delay: 5000,
     color: "muted",
   },
@@ -29,7 +29,7 @@ const consoleCommands = [
 const Hero = () => {
   const [copied, setCopied] = useState(false);
   const [visibleLines, setVisibleLines] = useState(0);
-  const serverUrl = "https://mcp.supabase.io/server";
+  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL as string;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(serverUrl);
@@ -135,7 +135,7 @@ const Hero = () => {
                   Database Operations
                 </Badge>
                 <span className="text-foreground text-sm font-semibold">
-                  7 Tools
+                  6 Tools
                 </span>
               </div>
             </div>
@@ -169,7 +169,7 @@ const Hero = () => {
                 ))}
                 {visibleLines > 0 && visibleLines < consoleCommands.length && (
                   <div className="flex items-center gap-2 text-yellow-500">
-                    <div className="h-2 w-2 animate-pulse rounded-full bg-yellow-500"></div>
+                    <Clock className="size-3.5 animate-spin" />
                     <span>Processing...</span>
                   </div>
                 )}

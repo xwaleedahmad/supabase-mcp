@@ -54,28 +54,15 @@ export default function Footer() {
 
             <div>
               <Link
-                href="https://github.com/mewaleedahmad/supabase-mcp"
+                href="https://github.com/xwaleedahmad/supabase-mcp"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button className="hover:bg-accent text-background w-full hover:scale-[102%]  cursor-pointer text-base transition-[scale,background-color] active:scale-95">
+                <Button className="hover:bg-accent text-background w-full cursor-pointer text-base transition-[scale,background-color] hover:scale-[102%] active:scale-95">
                   <Github className="text-background text-bold" />
                   View on GitHub
                 </Button>
               </Link>
-            </div>
-
-            <div className="border-secondary/30 border-t pt-4 text-center">
-              <p className="text-muted-foreground text-sm">
-                Built with ❤️ by{" "}
-                <Link
-                  className="underline"
-                  href="https://waleedahmad.online/"
-                  target="_blank"
-                >
-                  Waleed
-                </Link>
-              </p>
             </div>
           </CardContent>
         </Card>
