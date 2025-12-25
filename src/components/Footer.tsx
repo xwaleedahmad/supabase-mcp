@@ -57,6 +57,7 @@ export default function Footer() {
                 href="https://github.com/xwaleedahmad/supabase-mcp"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="focus:outline-none"
               >
                 <Button className="hover:bg-accent text-background w-full cursor-pointer text-base transition-[scale,background-color] hover:scale-[102%] active:scale-95">
                   <Github className="text-background text-bold" />
