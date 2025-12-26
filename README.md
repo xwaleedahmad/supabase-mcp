@@ -20,33 +20,29 @@ The project features a beautiful landing page showcasing the available tools and
 
 ## 🛠️ Available Tools
 
-The MCP server provides **7 powerful tools** for database interaction:
+The MCP server provides **6 powerful tools** for database operations:
 
-### 1. **Creator Info**
-
-Get detailed information about the app creator - contact information, website, social links, and professional background.
-
-### 2. **Create Document**
+### 1. **Create Document**
 
 Add new products to your inventory with comprehensive validation for title, price, category, and quantity. Automatically validates data types and constraints before insertion.
 
-### 3. **List Documents**
+### 2. **List Documents**
 
 Retrieve all products from the database with optional filtering by any column and customizable pagination support (default: 100 records).
 
-### 4. **Get Document**
+### 3. **Get Document**
 
 Find specific products by any column (ID, title, price, category, etc.) with exact value matching.
 
-### 5. **Update Document**
+### 4. **Update Document**
 
 Modify existing product details with flexible JSON-based updates. Supports partial updates of any field.
 
-### 6. **Upsert Document**
+### 5. **Upsert Document**
 
 Create or update records intelligently based on primary key (ID). Perfect for bulk operations and synchronization tasks.
 
-### 7. **Delete Document**
+### 6. **Delete Document**
 
 Safely remove products from the inventory with existence verification before deletion.
 
@@ -113,6 +109,7 @@ Safely remove products from the inventory with existence verification before del
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   NEXT_PUBLIC_SERVER_URL=http://localhost:3000/mcp  (to connect the mcp with AI Assistants)
    ```
 
    Get your Supabase credentials from:
@@ -205,7 +202,7 @@ supabase-mcp/
 {
   "mcpServers": {
     "supabase-mcp": {
-      "url": "http://localhost:3000/sse"
+      "url": "http://localhost:3000/mcp"
     }
   }
 }
@@ -217,7 +214,7 @@ For production:
 {
   "mcpServers": {
     "supabase-mcp": {
-      "url": "https://your-production-domain.com/sse"
+      "url": "https://your-production-domain.com/mcp"
     }
   }
 }
@@ -228,7 +225,7 @@ For production:
 ### **MCP Server Endpoint**
 
 - **SSE:** `http://localhost:3000/sse` (recommended for Claude Desktop)
-- **HTTP:** `http://localhost:3000/server` (for custom integrations)
+- **HTTP:** `http://localhost:3000/mcp` (for custom integrations)
 
 Both endpoints support:
 
@@ -240,9 +237,6 @@ Both endpoints support:
 Once configured with an MCP client, you can interact with your database using natural language:
 
 ```
-"Who created this application?"
-→ Uses creator_info tool
-
 "Add a new laptop to the inventory priced at $999 in the Electronics category"
 → Uses create_document tool
 
