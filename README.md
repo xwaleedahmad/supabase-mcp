@@ -20,35 +20,35 @@ The project features a beautiful landing page showcasing the available tools and
 
 ## 🛠️ Available Tools
 
-The MCP server provides **6 powerful tools** for database interaction:
+The MCP server provides **7 powerful tools** for database interaction:
 
-### 1. **Create Document**
+### 1. **Creator Info**
 
-Add new products to your inventory with validation for title, price, category, and quantity.
+Get detailed information about the app creator - contact information, website, social links, and professional background.
 
-### 2. **List Documents**
+### 2. **Create Document**
 
-Retrieve all products from the database with optional filtering and pagination support.
+Add new products to your inventory with comprehensive validation for title, price, category, and quantity. Automatically validates data types and constraints before insertion.
 
-### 3. **Get Document**
+### 3. **List Documents**
 
-Find specific products by any column (ID, title, price, category, etc.).
+Retrieve all products from the database with optional filtering by any column and customizable pagination support (default: 100 records).
 
-### 4. **Update Document**
+### 4. **Get Document**
 
-Modify existing product details with JSON-based updates.
+Find specific products by any column (ID, title, price, category, etc.) with exact value matching.
 
-### 5. **Upsert Document**
+### 5. **Update Document**
 
-Create or update records based on primary key (ID).
+Modify existing product details with flexible JSON-based updates. Supports partial updates of any field.
 
-### 6. **Delete Document**
+### 6. **Upsert Document**
 
-Safely remove products from the inventory with existence verification.
+Create or update records intelligently based on primary key (ID). Perfect for bulk operations and synchronization tasks.
 
-### 7. **Creator Info**
+### 7. **Delete Document**
 
-Get detailed information about the app creator.
+Safely remove products from the inventory with existence verification before deletion.
 
 ## 🏗️ Tech Stack
 
@@ -92,7 +92,7 @@ Get detailed information about the app creator.
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/supabase-mcp.git
+   git clone https://github.com/xwaleedahmad/supabase-mcp.git
    cd supabase-mcp
    ```
 
@@ -240,14 +240,23 @@ Both endpoints support:
 Once configured with an MCP client, you can interact with your database using natural language:
 
 ```
+"Who created this application?"
+→ Uses creator_info tool
+
 "Add a new laptop to the inventory priced at $999 in the Electronics category"
 → Uses create_document tool
 
 "Show me all products in the Electronics category"
 → Uses list_documents tool with filtering
 
+"Find the product with ID abc-123"
+→ Uses get_document tool
+
 "Update the price of product with ID abc-123 to $899"
 → Uses update_document tool
+
+"Upsert a product with ID xyz-456, title 'Gaming Mouse', price $59.99, category 'Electronics', quantity 25"
+→ Uses upsert_document tool
 
 "Delete the product with title 'Old Laptop'"
 → Uses delete_document tool
