@@ -2,11 +2,12 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Play, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 const VideoShowcase = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 1,
@@ -15,6 +16,34 @@ const VideoShowcase = () => {
     triggerOnce: true,
     threshold: 0.6,
   });
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+
+      if (e.key.toLowerCase() === "f") {
+        if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement).tagName)) {
+          return;
+        }
+        e.preventDefault(); // Prevent default browser behavior for 'f'
+
+        if (!document.fullscreenElement) {
+          if (videoRef.current && isVideoPlaying) {
+            videoRef.current.requestFullscreen().catch((err) => {
+              console.error(`Unable to enter fullscreen: ${err.message}`);
+            });
+          }
+        } else {
+          document.exitFullscreen();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [isVideoPlaying]);
 
   return (
     <section id="video" className="container mx-auto px-6">
@@ -32,7 +61,7 @@ const VideoShowcase = () => {
             <span className="gradient-text">Real Action</span>
           </h2>
           <p className="text-muted-foreground mx-auto max-w-2xl text-lg text-pretty md:text-xl md:text-balance">
-            Watch a comprehensive walkthrough of the AppWrite MCP Server
+            Watch a comprehensive walkthrough of the Supabase MCP Server
             features and capabilities
           </p>
         </div>
@@ -44,13 +73,14 @@ const VideoShowcase = () => {
           {isVideoPlaying ? (
             <>
               <button
-                className="absolute top-3 right-3 z-10 cursor-pointer transition-transform hover:scale-110 active:scale-100"
+                className="absolute top-2 right-3 z-10 cursor-pointer transition-transform hover:scale-110 active:scale-100"
                 onClick={() => setIsVideoPlaying(false)}
               >
                 <X className="size-4 md:size-5" />
               </button>
               <video
-                src="https://res.cloudinary.com/waleedahmad/video/upload/v1766848823/Projects/supabase-mcp/supabase-mcp-full-demo_hrneuf.mp4"
+                ref={videoRef}
+                src="https://res.cloudinary.com/waleedahmad/video/upload/v1766851010/Projects/supabase-mcp/supabase-mcp-full-demo_stv1uq.mp4"
                 className="relative h-full w-full rounded-xl object-cover"
                 autoPlay
                 controls
