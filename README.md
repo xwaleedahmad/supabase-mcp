@@ -28,7 +28,7 @@ Add new products to your inventory with comprehensive validation for title, pric
 
 ### 2. **List Documents**
 
-Retrieve all products from the database with optional filtering by any column and customizable pagination support (default: 100 records).
+Retrieve all products from the database with optional filtering by any column.
 
 ### 3. **Get Document**
 
@@ -224,13 +224,9 @@ For production:
 
 ### **MCP Server Endpoint**
 
-- **SSE:** `http://localhost:3000/sse` (recommended for Claude Desktop)
-- **HTTP:** `http://localhost:3000/mcp` (for custom integrations)
+- **SSE:** `http://localhost:3000/sse` 
+- **HTTP:** `http://localhost:3000/mcp`
 
-Both endpoints support:
-
-- `GET` - Server-Sent Events transport
-- `POST` - HTTP JSON-RPC transport
 
 ## 🎯 Usage Examples
 
@@ -286,7 +282,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 **Waleed Ahmad**
 
-- 🌐 Website: [waleedahmad.online](https://waleedahmad.online/)
 - 💻 GitHub: [@xwaleedahmad](https://github.com/xwaleedahmad/)
 - 🐦 Twitter/X: [@xwaleedahmad](https://x.com/xwaleedahmad/)
 - 📧 Email: waleedgondal57@gmail.com
