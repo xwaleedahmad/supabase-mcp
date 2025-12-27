@@ -50,7 +50,7 @@ const VideoShowcase = () => {
                 <X className="size-4 md:size-5" />
               </button>
               <video
-                src="demo-video.mp4"
+                src="https://res.cloudinary.com/waleedahmad/video/upload/v1766848823/Projects/supabase-mcp/supabase-mcp-full-demo_hrneuf.mp4"
                 className="relative h-full w-full rounded-xl object-cover"
                 autoPlay
                 controls
